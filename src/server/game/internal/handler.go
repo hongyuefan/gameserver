@@ -48,6 +48,6 @@ errDeal:
 }
 
 func handlerCreateGameRoom(args []interface{}) {
-	m := args[0].(*msg.RoomCreate)
+	//m := args[0].(*msg.RoomCreate)
 
 }

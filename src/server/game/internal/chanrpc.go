@@ -2,7 +2,7 @@ package internal
 
 import (
 	"reflect"
-	agent "server/agent_manager"
+	agent "server/manage_agent"
 
 	"github.com/name5566/leaf/gate"
 )

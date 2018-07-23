@@ -44,6 +44,28 @@ type RoomCreate struct {
 	RoomName    string
 	RoomPass    string
 	CreateTime  int64
+	Players     []int64
+	MaxNum      int8
+}
+
+func (m *RoomCreate) AddPlayer(playerId int64) {
+	m.Players = append(m.Players, playerId)
+}
+
+func (m *RoomCreate) DelPlayer(playerId int64) {
+	for k, v := range m.Players {
+		if v == playerId {
+			m.Players = append(m.Players[:k], m.Players[k:])
+		}
+	}
+}
+
+func (m *RoomCreate) GetCount() int8 {
+	return len(m.Players)
+}
+
+func (m *RoomCreate) GetMax() int8 {
+	return m.MaxNum
 }
 
 type Response struct {
