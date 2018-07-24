@@ -57,7 +57,7 @@ func (m *RoomManager) AddPlayer(name string, playerId int64) error {
 func (m *RoomManager) DelPlayer(name string, playerId int64) {
 	rom := m.GetRoom(name)
 	if rom == nil {
-		return errors.New(fmt.Sprintf("Room %v not exist", name))
+		return
 	}
 	rom.DelPlayer(playerId)
 	if rom.GetCount() == 0 {
@@ -80,12 +80,16 @@ func (m *RoomManager) RoomBroadcaseExcept(name string, msg interface{}, ids []in
 		for _, v := range ids {
 			for ko, vo := range aIds {
 				if v == vo {
-					aIds = append(aIds[:ko], aIds[ko:])
+					aIds = append(aIds[:ko], aIds[ko+1:]...)
 				}
 			}
 		}
 		agent.MAgent.AgentMC(msg, aIds)
 	}
+}
+
+func (m *RoomManager) RoomMulticast(msg interface{}, ids []int64) {
+	agent.MAgent.AgentMC(msg, ids)
 }
 
 func (m *RoomManager) RoomP2P(msg interface{}, to int64) {

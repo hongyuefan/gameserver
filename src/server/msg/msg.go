@@ -47,7 +47,7 @@ type RoomCreate struct {
 	RoomPass    string
 	CreateTime  int64
 	Players     []int64
-	MaxNum      int8
+	MaxNum      int
 	lock        sync.RWMutex
 }
 
@@ -62,7 +62,7 @@ func (m *RoomCreate) DelPlayer(playerId int64) {
 	defer m.lock.Unlock()
 	for k, v := range m.Players {
 		if v == playerId {
-			m.Players = append(m.Players[:k], m.Players[k:])
+			m.Players = append(m.Players[:k], m.Players[k+1:]...)
 		}
 	}
 }
@@ -71,13 +71,13 @@ func (m *RoomCreate) GetPlayers() []int64 {
 	defer m.lock.RUnlock()
 	return m.Players
 }
-func (m *RoomCreate) GetCount() int8 {
+func (m *RoomCreate) GetCount() int {
 	m.lock.RLock()
 	defer m.lock.RUnlock()
 	return len(m.Players)
 }
 
-func (m *RoomCreate) GetMax() int8 {
+func (m *RoomCreate) GetMax() int {
 	return m.MaxNum
 }
 
