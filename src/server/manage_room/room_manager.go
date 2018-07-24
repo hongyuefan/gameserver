@@ -3,6 +3,7 @@ package manage_room
 import (
 	"errors"
 	"fmt"
+	agent "server/manage_agent"
 	"server/msg"
 
 	"github.com/name5566/leaf/util"
@@ -63,4 +64,30 @@ func (m *RoomManager) DelPlayer(name string, playerId int64) {
 		m.RemoveRoom(name)
 	}
 	return
+}
+
+func (m *RoomManager) RoomBroadcast(name string, msg interface{}) {
+	rom := m.GetRoom(name)
+	if rom != nil {
+		agent.MAgent.AgentMC(msg, rom.GetPlayers())
+	}
+}
+
+func (m *RoomManager) RoomBroadcaseExcept(name string, msg interface{}, ids []int64) {
+	rom := m.GetRoom(name)
+	if rom != nil {
+		aIds := rom.GetPlayers()
+		for _, v := range ids {
+			for ko, vo := range aIds {
+				if v == vo {
+					aIds = append(aIds[:ko], aIds[ko:])
+				}
+			}
+		}
+		agent.MAgent.AgentMC(msg, aIds)
+	}
+}
+
+func (m *RoomManager) RoomP2P(msg interface{}, to int64) {
+	agent.MAgent.AgentP2P(msg, to)
 }
