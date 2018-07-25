@@ -2,10 +2,10 @@ package main
 
 import (
 	"server/conf"
-	_ "server/database/mysqlbase"
 	"server/game"
 	"server/gate"
 	"server/login"
+	_ "server/manage_class"
 
 	"github.com/name5566/leaf"
 	lconf "github.com/name5566/leaf/conf"

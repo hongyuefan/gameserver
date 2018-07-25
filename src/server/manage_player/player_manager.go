@@ -4,10 +4,8 @@ import (
 	"github.com/name5566/leaf/util"
 )
 
-var MPlayer *PlayerManager
-
-func init() {
-	MPlayer = &PlayerManager{
+func NewPlayerManager() *PlayerManager {
+	return &PlayerManager{
 		mPlayer: new(util.Map),
 	}
 }
@@ -16,24 +14,33 @@ type PlayerManager struct {
 	mPlayer *util.Map
 }
 
-type Player struct {
-	Id         int64
-	NickName   string
-	CreateTime int64
+func (m *PlayerManager) AddtPlayer(id int64, p *Player) {
+	m.mPlayer.Set(id, p)
 }
 
-func (m *PlayerManager) InsertPlayer(id int64, nickName string, creatime int64) {
-	m.mPlayer.Set(id, &Player{
-		Id:         id,
-		NickName:   nickName,
-		CreateTime: creatime,
-	})
-}
-
-func (m *PlayerManager) DeletePlayer(id int64) {
+func (m *PlayerManager) DelPlayer(id int64) {
 	m.mPlayer.Del(id)
 }
 
 func (m *PlayerManager) GetPlayer(id int64) *Player {
-	return m.mPlayer.Get(id)
+	p := m.mPlayer.Get(id)
+	if p != nil {
+		return p.(*Player)
+	}
+	return nil
+}
+
+func (m *PlayerManager) UpdatePlayer(id int64, p *Player) {
+	m.mPlayer.Set(id, p)
+}
+
+func (m *PlayerManager) Count() int {
+	return m.mPlayer.Len()
+}
+
+func (m *PlayerManager) GetPlayersId() (ids []int64) {
+	m.mPlayer.RLockRange(func(k, v interface{}) {
+		ids = append(ids, k.(int64))
+	})
+	return
 }

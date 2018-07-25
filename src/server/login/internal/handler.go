@@ -19,9 +19,9 @@ func handleMsg(m interface{}, h interface{}) {
 }
 
 func init() {
-	handleMsg(&msg.UserRegist{}, handleRegist)
+	handleMsg(&msg.PlayerRegist{}, handleRegist)
 	handleMsg(&msg.SendIdentifyCode{}, handleSendIdentifyCode)
-	handleMsg(&msg.UserLogin{}, handleLogin)
+	handleMsg(&msg.PlayerLogin{}, handleLogin)
 }
 
 func handleSendIdentifyCode(args []interface{}) {
@@ -54,7 +54,7 @@ func handleLogin(args []interface{}) {
 		token string
 		play  *db.GamePlayer
 	)
-	m := args[0].(*msg.UserLogin)
+	m := args[0].(*msg.PlayerLogin)
 
 	play = &db.GamePlayer{MobileOrEmail: m.MobileOrEmail, Password: m.Password}
 
@@ -82,7 +82,7 @@ func handleRegist(args []interface{}) {
 		pId   int64
 		token string
 	)
-	m := args[0].(*msg.UserRegist)
+	m := args[0].(*msg.PlayerRegist)
 
 	code := skeleton.GetSession(m.MobileOrEmail)
 

@@ -9,7 +9,7 @@ type BussTypeId uint32
 const (
 	Buss_Verify_Code BussTypeId = iota
 	Buss_RegistAndLogin_Code
-	Buss_GetGameClass_Code
+	Buss_GameClassGet_Code
 	Buss_Chat_Code
 )
 

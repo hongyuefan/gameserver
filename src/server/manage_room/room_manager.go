@@ -3,25 +3,21 @@ package manage_room
 import (
 	"errors"
 	"fmt"
-	agent "server/manage_agent"
-	"server/msg"
 
 	"github.com/name5566/leaf/util"
 )
-
-var MRoom *RoomManager
-
-func init() {
-	MRoom = &RoomManager{
-		mRoom: new(util.Map),
-	}
-}
 
 type RoomManager struct {
 	mRoom *util.Map
 }
 
-func (m *RoomManager) CreateRoom(name string, rom *msg.RoomCreate) (err error) {
+func NewRoomManager() *RoomManager {
+	return &RoomManager{
+		mRoom: new(util.Map),
+	}
+}
+
+func (m *RoomManager) AddRoom(name string, rom *GameRoom) (err error) {
 	if m.mRoom.Get(name) != nil {
 		err = errors.New(fmt.Sprintf("Room %v already exist", name))
 		return
@@ -30,68 +26,14 @@ func (m *RoomManager) CreateRoom(name string, rom *msg.RoomCreate) (err error) {
 	return
 }
 
-func (m *RoomManager) RemoveRoom(name string) {
+func (m *RoomManager) DelRoom(name string) {
 	m.mRoom.Del(name)
 }
 
-func (m *RoomManager) GetRoom(name string) *msg.RoomCreate {
+func (m *RoomManager) GetRoom(name string) *GameRoom {
 	rom := m.mRoom.Get(name)
 	if rom != nil {
-		return rom.(*msg.RoomCreate)
+		return rom.(*GameRoom)
 	}
 	return nil
-}
-
-func (m *RoomManager) AddPlayer(name string, playerId int64) error {
-	rom := m.GetRoom(name)
-	if rom == nil {
-		return errors.New(fmt.Sprintf("Room %v not exist", name))
-	}
-	if rom.GetCount() >= rom.GetMax() {
-		return errors.New("Room full")
-	}
-	rom.AddPlayer(playerId)
-	return nil
-}
-
-func (m *RoomManager) DelPlayer(name string, playerId int64) {
-	rom := m.GetRoom(name)
-	if rom == nil {
-		return
-	}
-	rom.DelPlayer(playerId)
-	if rom.GetCount() == 0 {
-		m.RemoveRoom(name)
-	}
-	return
-}
-
-func (m *RoomManager) RoomBroadcast(name string, msg interface{}) {
-	rom := m.GetRoom(name)
-	if rom != nil {
-		agent.MAgent.AgentMC(msg, rom.GetPlayers())
-	}
-}
-
-func (m *RoomManager) RoomBroadcaseExcept(name string, msg interface{}, ids []int64) {
-	rom := m.GetRoom(name)
-	if rom != nil {
-		aIds := rom.GetPlayers()
-		for _, v := range ids {
-			for ko, vo := range aIds {
-				if v == vo {
-					aIds = append(aIds[:ko], aIds[ko+1:]...)
-				}
-			}
-		}
-		agent.MAgent.AgentMC(msg, aIds)
-	}
-}
-
-func (m *RoomManager) RoomMulticast(msg interface{}, ids []int64) {
-	agent.MAgent.AgentMC(msg, ids)
-}
-
-func (m *RoomManager) RoomP2P(msg interface{}, to int64) {
-	agent.MAgent.AgentP2P(msg, to)
 }

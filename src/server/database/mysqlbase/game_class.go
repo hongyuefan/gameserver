@@ -12,7 +12,7 @@ import (
 type GameClass struct {
 	Id              int64  `orm:"column(game_id);auto"`
 	GameName        string `orm:"column(game_name);size(64)"`
-	GamePlayerCount int64  `orm:"column(game_player_count)"`
+	GamePlayerCount int    `orm:"column(game_player_count)"`
 }
 
 func init() {
