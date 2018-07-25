@@ -30,10 +30,17 @@ func (m *RoomManager) DelRoom(name string) {
 	m.mRoom.Del(name)
 }
 
-func (m *RoomManager) GetRoom(name string) *GameRoom {
+func (m *RoomManager) GetRoomByName(name string) *GameRoom {
 	rom := m.mRoom.Get(name)
 	if rom != nil {
 		return rom.(*GameRoom)
 	}
 	return nil
+}
+
+func (m *RoomManager) GetRooms() (roms []*GameRoom) {
+	m.mRoom.RLockRange(func(k interface{}, v interface{}) {
+		roms = append(roms, v.(*GameRoom))
+	})
+	return
 }

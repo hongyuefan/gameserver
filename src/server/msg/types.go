@@ -11,6 +11,8 @@ const (
 	Buss_RegistAndLogin_Code
 	Buss_GameClassGet_Code
 	Buss_Chat_Code
+	Buss_GameRoomAdd_Code
+	Buss_GameRoomGet_Code
 )
 
 var (

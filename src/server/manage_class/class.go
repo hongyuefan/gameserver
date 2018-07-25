@@ -19,3 +19,7 @@ func NewGameClass(id int64, name string, max int) *GameClass {
 		Rooms:    mr.NewRoomManager(),
 	}
 }
+
+func (m *GameClass) GetMax() int {
+	return m.MaxNum
+}

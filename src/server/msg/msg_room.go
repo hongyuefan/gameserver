@@ -10,8 +10,13 @@ type GameRoomAdd struct {
 	RoomPass    string
 }
 
-type GameRoomGet struct {
-	ClassId  int64
-	RoomId   int64
-	RommName string
+type GameRoomGetReq struct {
+	ClassId int64
+}
+
+type GameRoomGetRsp struct {
+	RoomName    string
+	CreatorName string
+	IsNeedPass  bool
+	Creatime    int64
 }

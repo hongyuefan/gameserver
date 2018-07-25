@@ -6,6 +6,7 @@ import (
 	"server/gate"
 	"server/login"
 	_ "server/manage_class"
+	_ "server/manage_player"
 
 	"github.com/name5566/leaf"
 	lconf "github.com/name5566/leaf/conf"

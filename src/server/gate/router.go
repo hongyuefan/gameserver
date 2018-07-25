@@ -7,8 +7,12 @@ import (
 )
 
 func init() {
-	msg.Processor.SetRouter(&msg.UserRegist{}, login.ChanRPC)
+	msg.Processor.SetRouter(&msg.PlayerRegist{}, login.ChanRPC)
 	msg.Processor.SetRouter(&msg.SendIdentifyCode{}, login.ChanRPC)
-	msg.Processor.SetRouter(&msg.UserLogin{}, login.ChanRPC)
-	msg.Processor.SetRouter(&msg.GameClass{}, game.ChanRPC)
+	msg.Processor.SetRouter(&msg.PlayerLogin{}, login.ChanRPC)
+
+	msg.Processor.SetRouter(&msg.GameClassGet{}, game.ChanRPC)
+
+	msg.Processor.SetRouter(&msg.GameRoomAdd{}, game.ChanRPC)
+	msg.Processor.SetRouter(&msg.GameRoomGetReq{}, game.ChanRPC)
 }

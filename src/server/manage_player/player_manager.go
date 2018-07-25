@@ -4,6 +4,12 @@ import (
 	"github.com/name5566/leaf/util"
 )
 
+var MPlayer *PlayerManager
+
+func init() {
+	MPlayer = NewPlayerManager()
+}
+
 func NewPlayerManager() *PlayerManager {
 	return &PlayerManager{
 		mPlayer: new(util.Map),
@@ -14,7 +20,7 @@ type PlayerManager struct {
 	mPlayer *util.Map
 }
 
-func (m *PlayerManager) AddtPlayer(id int64, p *Player) {
+func (m *PlayerManager) AddPlayer(id int64, p *Player) {
 	m.mPlayer.Set(id, p)
 }
 

@@ -3,16 +3,33 @@ package manage_room
 import (
 	agent "server/manage_agent"
 	mp "server/manage_player"
+	am "server/util/arithmetic"
+	"time"
 )
 
 type GameRoom struct {
 	GameClassId int64
 	CreatorId   int64
+	CreatorName string
 	RoomName    string
 	RoomPass    string
 	CreateTime  int64
 	MaxNum      int
+	State       int8
 	Players     *mp.PlayerManager
+}
+
+func NewGameRoom(classId, creatorId int64, max int, creatorName, roomPass string) *GameRoom {
+	return &GameRoom{
+		GameClassId: classId,
+		MaxNum:      max,
+		CreatorId:   creatorId,
+		CreateTime:  time.Now().Unix(),
+		RoomPass:    roomPass,
+		RoomName:    am.GenCode(4),
+		State:       0,
+		Players:     mp.NewPlayerManager(),
+	}
 }
 
 func (m *GameRoom) Count() int {
