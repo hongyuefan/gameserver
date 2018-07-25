@@ -18,5 +18,5 @@ func handler(m interface{}, h interface{}) {
 }
 
 func handlerGetGameClass(args []interface{}) {
-	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_GetGameClass_Code, mc.MClass.GetClass())
+	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_GameClassGet_Code, mc.MClass.GetClass())
 }
