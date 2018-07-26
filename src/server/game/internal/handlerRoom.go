@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"errors"
 	ms "server/manage_class"
 	mp "server/manage_player"
 	mr "server/manage_room"
@@ -12,6 +13,7 @@ import (
 func init() {
 	handler(&msg.GameRoomAdd{}, handlerGameRoomAdd)
 	handler(&msg.GameRoomGetReq{}, handlerGameRoomGet)
+	handler(&msg.GameRoomJoinReq{}, handlerGameRoomJoin)
 }
 
 func handlerGameRoomAdd(args []interface{}) {
@@ -29,7 +31,7 @@ func handlerGameRoomAdd(args []interface{}) {
 	gameRoom.Players.AddPlayer(m.CreatorId, gamePlayer)
 
 	if err = gameClass.Rooms.AddRoom(gameRoom.RoomName, gameRoom); err != nil {
-		msg.FailedHandler(args[1].(gate.Agent), err)
+		msg.FailedHandler(args[1].(gate.Agent), msg.Buss_GameRoomAdd_Code, err)
 	}
 
 	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_GameRoomAdd_Code, nil)
@@ -57,4 +59,43 @@ func handlerGameRoomGet(args []interface{}) {
 		})
 	}
 	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_GameRoomGet_Code, gameRooms)
+}
+
+func handlerGameRoomJoin(args []interface{}) {
+	var (
+		err        error
+		gamePlayer *mp.Player
+	)
+
+	m := args[0].(*msg.GameRoomJoinReq)
+
+	rom := ms.MClass.GetClassById(m.ClassId).Rooms.GetRoomByName(m.RoomName)
+
+	if rom.Count() >= rom.GetMax() {
+		err = errors.New("romm full")
+		goto errDeal
+	}
+	if rom.RoomPass != m.RoomPass {
+		err = errors.New("room password not right")
+		goto errDeal
+	}
+	gamePlayer = mp.MPlayer.GetPlayer(m.PlayerId)
+	if gamePlayer == nil {
+		err = errors.New("player not exist or offline")
+		goto errDeal
+	}
+	rom.Players.AddPlayer(m.PlayerId, gamePlayer)
+	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_GameRoomJoin_Code, "")
+	return
+errDeal:
+	msg.FailedHandler(args[1].(gate.Agent), msg.Buss_GameRoomJoin_Code, err)
+	return
+
+}
+
+func handlerGameRoomExit(args []interface{}) {
+	m := args[0].(*msg.GameRoomExitReq)
+	rom := ms.MClass.GetClassById(m.ClassId).Rooms.GetRoomByName(m.RoomName)
+	rom.Players.DelPlayer(m.PlayerId)
+	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_GameRoomExit_Code, "")
 }

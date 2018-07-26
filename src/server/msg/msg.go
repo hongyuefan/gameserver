@@ -32,9 +32,10 @@ func SuccessHandler(agent gate.Agent, buss BussTypeId, data interface{}) {
 	})
 }
 
-func FailedHandler(agent gate.Agent, err error) {
+func FailedHandler(agent gate.Agent, buss BussTypeId, err error) {
 	agent.WriteMsg(&Response{
 		Success: false,
+		BussId:  buss,
 		Message: err.Error(),
 	})
 }

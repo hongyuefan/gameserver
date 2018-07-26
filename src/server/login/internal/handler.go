@@ -45,7 +45,7 @@ func handleSendIdentifyCode(args []interface{}) {
 	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_Verify_Code, "")
 	return
 errDeal:
-	msg.FailedHandler(args[1].(gate.Agent), err)
+	msg.FailedHandler(args[1].(gate.Agent), msg.Buss_Verify_Code, err)
 }
 
 func handleLogin(args []interface{}) {
@@ -72,7 +72,7 @@ func handleLogin(args []interface{}) {
 	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_RegistAndLogin_Code, token)
 	return
 errDeal:
-	msg.FailedHandler(args[1].(gate.Agent), err)
+	msg.FailedHandler(args[1].(gate.Agent), msg.Buss_RegistAndLogin_Code, err)
 }
 
 func handleRegist(args []interface{}) {
@@ -115,7 +115,7 @@ func handleRegist(args []interface{}) {
 	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_RegistAndLogin_Code, token)
 	return
 errDeal:
-	msg.FailedHandler(args[1].(gate.Agent), err)
+	msg.FailedHandler(args[1].(gate.Agent), msg.Buss_RegistAndLogin_Code, err)
 }
 
 func agentAdd(k int64, g gate.Agent) {

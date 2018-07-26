@@ -13,6 +13,8 @@ const (
 	Buss_Chat_Code
 	Buss_GameRoomAdd_Code
 	Buss_GameRoomGet_Code
+	Buss_GameRoomJoin_Code
+	Buss_GameRoomExit_Code
 )
 
 var (

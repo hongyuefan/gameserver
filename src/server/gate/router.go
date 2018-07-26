@@ -15,4 +15,6 @@ func init() {
 
 	msg.Processor.SetRouter(&msg.GameRoomAdd{}, game.ChanRPC)
 	msg.Processor.SetRouter(&msg.GameRoomGetReq{}, game.ChanRPC)
+	msg.Processor.SetRouter(&msg.GameRoomJoinReq{}, game.ChanRPC)
+	msg.Processor.SetRouter(&msg.GameRoomExitReq{}, game.ChanRPC)
 }
