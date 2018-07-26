@@ -1,8 +1,9 @@
 package main
 
 import (
-	ct "client"
+	ct "client/handler"
 	"fmt"
+	"server/msg"
 	"sync"
 )
 
@@ -19,9 +20,10 @@ func main() {
 		return
 	}
 
-	c.RegistFunc(ct.Buss_RegistAndLogin_Code, ct.HandlerLogin_Recv)
-	c.RegistFunc(ct.Buss_GetGameClass_Code, ct.HandlerGetGameClass_Recv)
-	c.RegistFunc(ct.Buss_Chat_Code, ct.HandlerChat_Recv)
+	c.RegistFunc(msg.Buss_RegistAndLogin_Code, ct.HandlerLogin_Recv)
+	c.RegistFunc(msg.Buss_GameClassGet_Code, ct.HandlerGetGameClass_Recv)
+	c.RegistFunc(msg.Buss_Chat_Code, ct.HandlerChat_Recv)
+	c.RegistFunc(msg.Buss_GameRoomAdd_Code, ct.HandlerGameRoomAdd_Recv)
 
 	go func() {
 		wg.Add(1)
@@ -34,6 +36,10 @@ func main() {
 			fmt.Println("input error ", err.Error())
 		}
 		switch op {
+		case "rg":
+			ct.HandlerGetGameRoom_Send(c)
+		case "ra":
+			ct.HandlerGameRoomAdd_Send(c)
 		case "chat":
 			ct.HandlerChat_Send(c)
 		case "cl":

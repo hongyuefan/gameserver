@@ -1,4 +1,4 @@
-package client
+package handler
 
 import (
 	"encoding/binary"
@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"server/msg"
 
 	"github.com/name5566/leaf/util"
 )
@@ -51,7 +52,7 @@ func (c *Client) SendCmd(s interface{}) (err error) {
 	return
 }
 
-func (c *Client) RegistFunc(key BussTypeId, f CallFunc) {
+func (c *Client) RegistFunc(key msg.BussTypeId, f CallFunc) {
 	c.funcMap.Set(key, f)
 }
 
