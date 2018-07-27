@@ -11,7 +11,7 @@ func init() {
 	msg.Processor.SetRouter(&msg.SendIdentifyCode{}, login.ChanRPC)
 	msg.Processor.SetRouter(&msg.PlayerLogin{}, login.ChanRPC)
 
-	msg.Processor.SetRouter(&msg.GameClassGet{}, game.ChanRPC)
+	msg.Processor.SetRouter(&msg.GameClassGetReq{}, game.ChanRPC)
 
 	msg.Processor.SetRouter(&msg.GameRoomAdd{}, game.ChanRPC)
 	msg.Processor.SetRouter(&msg.GameRoomGetReq{}, game.ChanRPC)

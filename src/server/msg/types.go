@@ -10,7 +10,6 @@ const (
 	Buss_Verify_Code BussTypeId = iota
 	Buss_RegistAndLogin_Code
 	Buss_GameClassGet_Code
-	Buss_Chat_Code
 	Buss_GameRoomAdd_Code
 	Buss_GameRoomGet_Code
 	Buss_GameRoomJoin_Code

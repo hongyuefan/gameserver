@@ -3,7 +3,6 @@ package manage_class
 import (
 	_ "server/database/mysqlbase"
 	db "server/database/mysqlbase"
-	"server/msg"
 
 	"github.com/name5566/leaf/util"
 )
@@ -48,9 +47,9 @@ func (m *ClassManager) GetClassById(id int64) *GameClass {
 	return nil
 }
 
-func (m *ClassManager) GetClass() (gcs []*msg.GameClass) {
+func (m *ClassManager) GetClass() (gcs []*GameClass) {
 	m.mClass.RLockRange(func(k, v interface{}) {
-		gcs = append(gcs, v.(*msg.GameClass))
+		gcs = append(gcs, v.(*GameClass))
 	})
 	return
 }

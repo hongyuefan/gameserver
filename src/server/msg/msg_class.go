@@ -1,13 +1,13 @@
 package msg
 
 func init() {
-	Processor.Register(&GameClassGet{})
+	Processor.Register(&GameClassGetReq{})
 }
 
-type GameClassGet struct {
+type GameClassGetReq struct {
 }
 
-type GameClass struct {
+type GameClassGetRsp struct {
 	ClassId   int64
 	ClassName string
 }

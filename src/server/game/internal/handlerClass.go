@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	handler(&msg.GameClassGet{}, handlerGetGameClass)
+	handler(&msg.GameClassGetReq{}, handlerGetGameClass)
 }
 
 func handler(m interface{}, h interface{}) {
@@ -18,5 +18,12 @@ func handler(m interface{}, h interface{}) {
 }
 
 func handlerGetGameClass(args []interface{}) {
-	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_GameClassGet_Code, mc.MClass.GetClass())
+	var gClasses []*msg.GameClassGetRsp
+
+	mcs := mc.MClass.GetClass()
+
+	for _, gClass := range mcs {
+		gClasses = append(gClasses, &msg.GameClassGetRsp{ClassId: gClass.Id, ClassName: gClass.GameName})
+	}
+	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_GameClassGet_Code, gClasses)
 }
