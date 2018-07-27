@@ -11,7 +11,7 @@ func HandlerGetGameClass_Send(c *Client) {
 
 	u := new(msg.GameClassGet)
 
-	m["GameClass"] = u
+	m["GameClassGet"] = u
 
 	if err := c.SendCmd(m); err != nil {
 		fmt.Println("GetGameClass Send Error:", err.Error())

@@ -2,6 +2,9 @@ package msg
 
 func init() {
 	Processor.Register(&GameRoomAdd{})
+	Processor.Register(&GameRoomGetReq{})
+	Processor.Register(&GameRoomJoinReq{})
+	Processor.Register(&GameRoomExitReq{})
 }
 
 type GameRoomAdd struct {
