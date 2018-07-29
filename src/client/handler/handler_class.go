@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"server/msg"
 )
@@ -19,5 +20,15 @@ func HandlerGetGameClass_Send(c *Client) {
 	return
 }
 func HandlerGetGameClass_Recv(data interface{}) {
-	fmt.Println("GetGameClass:", data)
+
+	var gameClass []*msg.GameClassGetRsp
+
+	if err := json.Unmarshal(data.([]byte), &gameClass); err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	for _, v := range gameClass {
+		fmt.Println("GetGameClass:", v)
+	}
 }

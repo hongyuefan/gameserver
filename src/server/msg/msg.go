@@ -1,6 +1,8 @@
 package msg
 
 import (
+	js "encoding/json"
+
 	"github.com/name5566/leaf/gate"
 	"github.com/name5566/leaf/network/json"
 )
@@ -21,14 +23,17 @@ type Response struct {
 	Success bool
 	BussId  BussTypeId
 	Message string
-	Data    interface{}
+	Data    []byte
 }
 
 func SuccessHandler(agent gate.Agent, buss BussTypeId, data interface{}) {
+
+	byt, _ := js.Marshal(data)
+
 	agent.WriteMsg(&Response{
 		Success: true,
 		BussId:  buss,
-		Data:    data,
+		Data:    byt,
 	})
 }
 

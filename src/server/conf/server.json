@@ -5,7 +5,7 @@
 	"WSAddr": "127.0.0.1:3653",
 	"MaxConnNum": 20000,
 	"SqlType":"mysql",
-	"Conn":"root:@tcp(127.0.0.1:3306)/jbt",
+	"Conn":"root:350999@tcp(47.104.195.212:3306)/jbt",
 	
 	"Email_From_Name":"hello",
 	"Email_Stmp":"smtp.qq.com",

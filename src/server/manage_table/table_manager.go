@@ -1,9 +1,6 @@
 package manage_table
 
 import (
-	"errors"
-	"fmt"
-
 	"github.com/name5566/leaf/util"
 )
 
@@ -17,20 +14,32 @@ func NewTableManager() *TableManager {
 	}
 }
 
-func (m *TableManager) AddTable(tId int, t *Table) {
+func (m *TableManager) AddTable(tId int64, t *Table) {
 	m.mTable.Set(tId, t)
 }
 
-func (m *TableManager) GetTableById(tId int) *Table {
-	return m.mTable.Get(tId)
+func (m *TableManager) GetTableById(tId int64) *Table {
+	tb := m.mTable.Get(tId)
+	if tb != nil {
+		return tb.(*Table)
+	}
+	return nil
 }
 
-func (m *TableManager) DelTable(tId int) {
+func (m *TableManager) DelTable(tId int64) {
 	m.mTable.Del(tId)
 }
 
 func (m *TableManager) GetTables() (tbs []*Table) {
 	m.mTable.RLockRange(func(k, v interface{}) {
 		tbs = append(tbs, v.(*Table))
+	})
+	return
+}
+
+func (m *TableManager) Free() {
+	m.mTable.LockRange(func(k, v interface{}) {
+		v.(*Table).Over()
+		m.mTable.UnsafeDel(k)
 	})
 }

@@ -24,13 +24,15 @@ func handlerGameRoomAdd(args []interface{}) {
 
 	gameClass := ms.MClass.GetClassById(m.GameClassId)
 
-	gamePlayer := mp.MPlayer.GetPlayer(m.CreatorId)
+	gamePlayer := mp.MPlayer.GetPlayerById(m.CreatorId)
 
-	gameRoom := mr.NewGameRoom(m.GameClassId, m.CreatorId, gameClass.GetMax(), gamePlayer.NickName, m.RoomPass)
+	romId := int64(gameClass.Rooms.GetRoomsCount() + 1)
+
+	gameRoom := mr.NewGameRoom(m.GameClassId, romId, m.CreatorId, gameClass.GetMax(), gamePlayer.NickName, m.RoomPass)
 
 	gameRoom.Players.AddPlayer(m.CreatorId, gamePlayer)
 
-	if err = gameClass.Rooms.AddRoom(gameRoom.RoomName, gameRoom); err != nil {
+	if err = gameClass.Rooms.AddRoom(romId, gameRoom); err != nil {
 		msg.FailedHandler(args[1].(gate.Agent), msg.Buss_GameRoomAdd_Code, err)
 	}
 
@@ -52,7 +54,7 @@ func handlerGameRoomGet(args []interface{}) {
 			bflag = true
 		}
 		gameRooms = append(gameRooms, &msg.GameRoomGetRsp{
-			RoomName:    rom.RoomName,
+			RoomId:      rom.RoomId,
 			CreatorName: rom.CreatorName,
 			IsNeedPass:  bflag,
 			Creatime:    rom.CreateTime,
@@ -65,11 +67,12 @@ func handlerGameRoomJoin(args []interface{}) {
 	var (
 		err        error
 		gamePlayer *mp.Player
+		rsp        *msg.GameRoomJoinRsp
 	)
 
 	m := args[0].(*msg.GameRoomJoinReq)
 
-	rom := ms.MClass.GetClassById(m.ClassId).Rooms.GetRoomByName(m.RoomName)
+	rom := ms.MClass.GetClassById(m.ClassId).Rooms.GetRoomById(m.RoomId)
 
 	if rom.Count() >= rom.GetMax() {
 		err = errors.New("romm full")
@@ -79,13 +82,18 @@ func handlerGameRoomJoin(args []interface{}) {
 		err = errors.New("room password not right")
 		goto errDeal
 	}
-	gamePlayer = mp.MPlayer.GetPlayer(m.PlayerId)
+	gamePlayer = mp.MPlayer.GetPlayerById(m.PlayerId)
 	if gamePlayer == nil {
 		err = errors.New("player not exist or offline")
 		goto errDeal
 	}
 	rom.Players.AddPlayer(m.PlayerId, gamePlayer)
-	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_GameRoomJoin_Code, "")
+
+	rsp = &msg.GameRoomJoinRsp{
+		RoomId:  m.RoomId,
+		Players: rom.Players.GetPlayers(),
+	}
+	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_GameRoomJoin_Code, rsp)
 	return
 errDeal:
 	msg.FailedHandler(args[1].(gate.Agent), msg.Buss_GameRoomJoin_Code, err)
@@ -95,7 +103,7 @@ errDeal:
 
 func handlerGameRoomExit(args []interface{}) {
 	m := args[0].(*msg.GameRoomExitReq)
-	rom := ms.MClass.GetClassById(m.ClassId).Rooms.GetRoomByName(m.RoomName)
+	rom := ms.MClass.GetClassById(m.ClassId).Rooms.GetRoomById(m.RoomId)
 	rom.Players.DelPlayer(m.PlayerId)
 	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_GameRoomExit_Code, "")
 }

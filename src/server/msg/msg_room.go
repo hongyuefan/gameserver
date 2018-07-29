@@ -18,21 +18,25 @@ type GameRoomGetReq struct {
 }
 
 type GameRoomGetRsp struct {
-	RoomName    string
+	RoomId      int64
 	CreatorName string
 	IsNeedPass  bool
 	Creatime    int64
 }
 
 type GameRoomJoinReq struct {
-	RoomName string
+	RoomId   int64
 	PlayerId int64
 	RoomPass string
 	ClassId  int64
 }
 
+type GameRoomJoinRsp struct {
+	RoomId  int64
+	Players interface{}
+}
 type GameRoomExitReq struct {
-	RoomName string
+	RoomId   int64
 	PlayerId int64
 	ClassId  int64
 }

@@ -17,21 +17,21 @@ func NewRoomManager() *RoomManager {
 	}
 }
 
-func (m *RoomManager) AddRoom(name string, rom *GameRoom) (err error) {
-	if m.mRoom.Get(name) != nil {
-		err = errors.New(fmt.Sprintf("Room %v already exist", name))
+func (m *RoomManager) AddRoom(roomId int64, rom *GameRoom) (err error) {
+	if m.mRoom.Get(roomId) != nil {
+		err = errors.New(fmt.Sprintf("Room %v already exist", roomId))
 		return
 	}
-	m.mRoom.Set(name, rom)
+	m.mRoom.Set(roomId, rom)
 	return
 }
 
-func (m *RoomManager) DelRoom(name string) {
-	m.mRoom.Del(name)
+func (m *RoomManager) DelRoom(roomId int64) {
+	m.mRoom.Del(roomId)
 }
 
-func (m *RoomManager) GetRoomByName(name string) *GameRoom {
-	rom := m.mRoom.Get(name)
+func (m *RoomManager) GetRoomById(roomId int64) *GameRoom {
+	rom := m.mRoom.Get(roomId)
 	if rom != nil {
 		return rom.(*GameRoom)
 	}
@@ -43,4 +43,8 @@ func (m *RoomManager) GetRooms() (roms []*GameRoom) {
 		roms = append(roms, v.(*GameRoom))
 	})
 	return
+}
+
+func (m *RoomManager) GetRoomsCount() int {
+	return m.mRoom.Len()
 }

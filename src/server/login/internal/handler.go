@@ -6,6 +6,7 @@ import (
 	"server/conf"
 	db "server/database/mysqlbase"
 	agent "server/manage_agent"
+	mp "server/manage_player"
 	"server/msg"
 	"server/util/arithmetic"
 	"strings"
@@ -68,7 +69,7 @@ func handleLogin(args []interface{}) {
 	if token, err = skeleton.TokenGen(fmt.Sprintf("%v", play.Id)); err != nil {
 		goto errDeal
 	}
-
+	mp.MPlayer.AddPlayer(play.Id, &mp.Player{Id: play.Id, NickName: play.Nickname, CreateTime: time.Now().Unix()})
 	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_RegistAndLogin_Code, token)
 	return
 errDeal:

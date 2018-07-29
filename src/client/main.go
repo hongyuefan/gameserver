@@ -24,6 +24,9 @@ func main() {
 	c.RegistFunc(msg.Buss_GameClassGet_Code, ct.HandlerGetGameClass_Recv)
 	c.RegistFunc(msg.Buss_Chat_Code, ct.HandlerChat_Recv)
 	c.RegistFunc(msg.Buss_GameRoomAdd_Code, ct.HandlerGameRoomAdd_Recv)
+	c.RegistFunc(msg.Buss_GameRoomGet_Code, ct.HandlerGetGameRoom_Recv)
+	c.RegistFunc(msg.Buss_GameRoomJoin_Code, ct.HandlerGameRoomJoin_Recv)
+	c.RegistFunc(msg.Buss_GameRoomExit_Code, ct.HandlerGameRoomExit_Recv)
 
 	go func() {
 		wg.Add(1)
@@ -36,6 +39,10 @@ func main() {
 			fmt.Println("input error ", err.Error())
 		}
 		switch op {
+		case "rj":
+			ct.HandlerGameRoomJoin_Send(c)
+		case "re":
+			ct.HandlerGameRoomExit_Send(c)
 		case "rg":
 			ct.HandlerGetGameRoom_Send(c)
 		case "ra":

@@ -143,7 +143,7 @@ func (c *Client) handlerMsg(b []byte) {
 
 	var err error
 
-	m := make(map[string]*Response, 0)
+	m := make(map[string]*msg.Response, 0)
 
 	if err = json.Unmarshal(b, &m); err != nil {
 		fmt.Println("Json Unmarshal Error:", err.Error())
@@ -159,7 +159,7 @@ func (c *Client) handlerMsg(b []byte) {
 
 	f := c.funcMap.Get(rsp.BussId)
 	if f == nil {
-		fmt.Println("Function ", rsp.BussId, "not Regist")
+		fmt.Println("Function", rsp.BussId, "not Regist")
 	}
 
 	f.(CallFunc)(rsp.Data)

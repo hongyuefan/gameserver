@@ -28,7 +28,7 @@ func (m *PlayerManager) DelPlayer(id int64) {
 	m.mPlayer.Del(id)
 }
 
-func (m *PlayerManager) GetPlayer(id int64) *Player {
+func (m *PlayerManager) GetPlayerById(id int64) *Player {
 	p := m.mPlayer.Get(id)
 	if p != nil {
 		return p.(*Player)
@@ -49,4 +49,17 @@ func (m *PlayerManager) GetPlayersId() (ids []int64) {
 		ids = append(ids, k.(int64))
 	})
 	return
+}
+
+func (m *PlayerManager) GetPlayers() (ps []*Player) {
+	m.mPlayer.RLockRange(func(k, v interface{}) {
+		ps = append(ps, v.(*Player))
+	})
+	return
+}
+
+func (m *PlayerManager) Free() {
+	m.mPlayer.LockRange(func(k, v interface{}) {
+		m.mPlayer.UnsafeDel(k)
+	})
 }

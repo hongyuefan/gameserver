@@ -1,17 +1,10 @@
 package handler
 
-type BussTypeId uint32
+import (
+	"server/msg"
+)
 
 type CallFunc func(interface{})
-
-const (
-	Buss_Verify_Code BussTypeId = iota
-	Buss_RegistAndLogin_Code
-	Buss_GetGameClass_Code
-	Buss_Chat_Code
-	Buss_Chat_GetFriend_Code
-	Buss_Chat_GetBlack_Code
-)
 
 type SendIdentifyCode struct {
 	Nation        string
@@ -48,7 +41,7 @@ type P struct {
 
 type ChatTo struct {
 	P
-	OpType BussTypeId
+	OpType msg.BussTypeId
 	Token  string
 	Msg    string
 	To_Ids []int64
@@ -64,7 +57,7 @@ func (c *ChatTo) GetMsg() string {
 
 type Response struct {
 	Success bool
-	BussId  BussTypeId
+	BussId  msg.BussTypeId
 	Message string
 	Data    interface{}
 }
