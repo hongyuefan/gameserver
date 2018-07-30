@@ -2,7 +2,6 @@ package msg
 
 import (
 	"errors"
-	"server/util/arithmetic"
 )
 
 var (
@@ -20,8 +19,10 @@ const (
 	Buss_GameRoomGet_Code
 	Buss_GameRoomJoin_Code
 	Buss_GameRoomExit_Code
+	Buss_GameRoomCard_Code
 	Buss_GameTableJoin_Code
 	Buss_GameTableExit_Code
+	Buss_GamePlayerGet_Code
 	Buss_Chat_Code
 )
 
@@ -32,20 +33,6 @@ const (
 	Card_Type_Ken
 	Card_Type_Po
 )
-
-func (m CardTypeId) GetRand() CardTypeId {
-	var seed int
-	seed = arithmetic.GetRand(0, 3)
-	switch seed {
-	case 0:
-		return Card_Type_Jan
-	case 1:
-		return Card_Type_Ken
-	case 2:
-		return Card_Type_Po
-	}
-	return Card_Type_Po
-}
 
 var (
 	Err_VerificationCode_TimeOut = errors.New("Verification Code TimeOut")

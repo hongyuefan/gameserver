@@ -31,6 +31,16 @@ type GameRoomJoinReq struct {
 	ClassId  int64
 }
 
+type GameRoomCardReq struct {
+	ClassId int64
+	RoomId  int64
+}
+type GameRoomCardRsp struct {
+	Jan uint32
+	Ken uint32
+	Po  uint32
+}
+
 type GameRoomJoinRsp struct {
 	RoomId  int64
 	Players interface{}

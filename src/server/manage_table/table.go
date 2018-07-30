@@ -1,6 +1,7 @@
 package manage_table
 
 import (
+	js "encoding/json"
 	"errors"
 	agent "server/manage_agent"
 	mc "server/manage_card"
@@ -23,9 +24,18 @@ type Table struct {
 
 func NewTable(tableId int64, max int) *Table {
 	return &Table{
-		TableId: tableId,
-		Max:     max,
-		Players: mp.NewPlayerManager(),
+		TableId:   tableId,
+		Max:       max,
+		Players:   mp.NewPlayerManager(),
+		chanCard:  make(chan *mc.Card, 2),
+		chanClose: make(chan bool, 1),
+	}
+}
+
+func (m *Table) PlayCard(c *mc.Card) {
+	select {
+	case m.chanCard <- c:
+	default:
 	}
 }
 
@@ -37,6 +47,7 @@ func (m *Table) TableJoin(p *mp.Player) error {
 		return nil
 	}
 	m.Start()
+	return nil
 }
 
 func (m *Table) TableExit(pId int64) {
@@ -47,8 +58,9 @@ func (m *Table) GetStatus() int32 {
 	return atomic.LoadInt32(&m.Status)
 }
 
-func (m *Table) TableBroadcast(msg interface{}) {
-	agent.MAgent.AgentMC(msg, m.Players.GetPlayersId())
+func (m *Table) TableBroadcast(isSuccess bool, buss msg.BussTypeId, data interface{}) {
+	byt, _ := js.Marshal(data)
+	agent.MAgent.AgentMC(&msg.Response{Success: isSuccess, BussId: buss, Data: byt}, m.Players.GetPlayersId())
 }
 
 func (m *Table) TableBroadcaseExcept(msg interface{}, ids []int64) {
@@ -91,27 +103,29 @@ func (m *Table) Over() {
 
 func (m *Table) f() {
 
-	chanT := time.Tick(time.Second * m.TimeOut)
-	defer close(chanT)
+	chanT := time.NewTicker(time.Second * time.Duration(m.TimeOut))
+	defer chanT.Stop()
 
-	select {
-	case c := <-m.chanCard:
-		m.Players.GetPlayerById(c.PlayerId).AddPlayCard(c)
-		if m.JudgeIsReady() {
-			m.PK()
-		}
-	case <-chanT:
-		if !m.JudgeIsReady() {
-			for _, p := range m.Players.GetPlayers() {
-				if p.GetPlayCard() == nil {
-					c := p.GetCardRand()
-					p.AddPlayCard(c)
+	for {
+		select {
+		case c := <-m.chanCard:
+			m.Players.GetPlayerById(c.PlayerId).AddPlayCard(c)
+			if m.JudgeIsReady() {
+				m.PK()
+			}
+		case <-chanT.C:
+			if !m.JudgeIsReady() {
+				for _, p := range m.Players.GetPlayers() {
+					if p.GetPlayCard() == nil {
+						c := p.GetCardRand()
+						p.AddPlayCard(c)
+					}
 				}
 			}
+			m.PK()
+		case <-m.chanClose:
+			return
 		}
-		m.PK()
-	case <-m.chanClose:
-		return
 	}
 }
 

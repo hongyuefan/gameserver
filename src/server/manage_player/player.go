@@ -60,10 +60,14 @@ func (m *Player) SubCard(ctp msg.CardTypeId) {
 	m.JKP_Cards.Set(ctp, num-1)
 }
 
-func (m *Player) GetCardRand() *mc.Card {
+func (m *Player) GetCardRand() (c *mc.Card) {
 	if m.GetCardCount() > 0 {
-		m.JKP_Cards.Get()
+		m.JKP_Cards.RLockRange(func(k, v interface{}) {
+			c = v.(*mc.Card)
+			return
+		})
 	}
+	return nil
 }
 
 func (m *Player) GetGold() uint64 {

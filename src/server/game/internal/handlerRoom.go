@@ -63,6 +63,22 @@ func handlerGameRoomGet(args []interface{}) {
 	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_GameRoomGet_Code, gameRooms)
 }
 
+func handlerGameRoomGetCards(args []interface{}) {
+
+	m := args[0].(*msg.GameRoomCardReq)
+
+	rom := ms.MClass.GetClassById(m.ClassId).Rooms.GetRoomById(m.RoomId)
+
+	j, k, p := rom.RoomGetCards()
+
+	rsp := &msg.GameRoomCardRsp{
+		Jan: j,
+		Ken: k,
+		Po:  p,
+	}
+	msg.SuccessHandler(args[1].(gate.Agent), msg.Buss_GameRoomCard_Code, rsp)
+}
+
 func handlerGameRoomJoin(args []interface{}) {
 	var (
 		err        error

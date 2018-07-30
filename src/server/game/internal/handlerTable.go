@@ -52,6 +52,6 @@ func handlerGameTableExit(args []interface{}) {
 
 func handlerGameTablePK(args []interface{}) {
 
-	m := args[0].(*msg.GameTablePKReq)
+	_ = args[0].(*msg.GameTablePKReq)
 
 }

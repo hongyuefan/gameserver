@@ -22,7 +22,8 @@ func (m *Card) Duel(cardB *Card) (result int8, err error) {
 		err = errors.New("card type not right")
 		return
 	}
-	return m.duel(m, cardB)
+	result = m.duel(m.CardType, cardB.CardType)
+	return
 }
 
 func (m *Card) IsRightCardType() bool {
@@ -56,4 +57,5 @@ func (m *Card) duel(cardTypeA, cardTypeB msg.CardTypeId) int8 {
 			return -1
 		}
 	}
+	return -2
 }

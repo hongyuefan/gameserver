@@ -64,6 +64,17 @@ func (m *GameRoom) RoomMulticast(msg interface{}, ids []int64) {
 	agent.MAgent.AgentMC(msg, ids)
 }
 
+func (m *GameRoom) RoomGetCards() (nJan, nKen, nPo uint32) {
+	pls := m.Players.GetPlayers()
+	for _, p := range pls {
+		j, k, p := p.GetCards()
+		nJan += j
+		nKen += k
+		nPo += p
+	}
+	return
+}
+
 func (m *GameRoom) RoomP2P(msg interface{}, to int64) {
 	agent.MAgent.AgentP2P(msg, to)
 }

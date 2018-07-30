@@ -15,3 +15,11 @@ type PlayerLogin struct {
 	MobileOrEmail string
 	Password      string
 }
+
+type PlayerGetReq struct {
+	PlayerId int64
+}
+type PlayerGetRsp struct {
+	Stars uint32
+	Gold  uint64
+}
